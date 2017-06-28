@@ -54,31 +54,31 @@
 		<hr>
 		<div class="row left">
 			<div class="col-lg-8 col-lg-offset-3">
-				<form class="form-inline" role="form" action="result.php"  method="post" >
+				<form class="form-inline" role="form" action="result.php"  method="get" >
 				  <div class="form-group">
-				    <input class="form-control" type="text" id="searchText" name="searchText" value="<?php 
-					 if (isset($_POST['searchText'])){
-					  echo($_POST['searchText']); }
+				    <input class="form-control" type="text" id="q" name="q" value="<?php 
+					 if (isset($_GET['q'])){
+					  echo($_GET['q']); }
 					 
 					  ?>"
 				  </div>
 				  <div class="form-group">
-					    <select id="searchType" name="searchType" class="form-control">
+					    <select id="type" name="type" class="form-control">
 						 <option value="all" <?php 
-						 if (isset($_POST['searchType']) && $_POST['searchType']=='all'){
+						 if (isset($_GET['type']) && $_GET['type']=='all'){
 						  echo 'selected="selected"'; }
 						 
 						  ?> > All</option>
 					  	<option value="title"
 						<?php 
-						 if ( isset($_POST['searchType']) && $_POST['searchType']=='title'){
+						 if ( isset($_GET['type']) && $_GET['type']=='title'){
 						  echo 'selected="selected"'; }
 						 
 						  ?> 
 						>By Title</option>
 						 <option value="author"
 						 <?php 
-						 if (isset($_POST['searchType']) && $_POST['searchType']=='author'){
+						 if (isset($_GET['type']) && $_GET['type']=='author'){
 						  echo 'selected="selected"'; }
 						  else { echo(' ');}
 						  ?> 
@@ -86,7 +86,7 @@
 		
 						</select>
 					  </div>
-				  <button type="submit" name="submit" id="searchButton" class="btn btn-warning btn-lg">Search again!</button>
+				  <button type="submit" id="searchButton" class="btn btn-warning btn-lg">Search again!</button>
 				</form>					
 			</div>
 			<div class="col-lg-3"></div>
@@ -100,9 +100,9 @@
 			<div class="col-lg-8">
 			 <ul  >
 			 <?php
-if (isset($_POST['submit'])) {
+if (isset($_GET['q'])) {
 	
-	$searchType=$_POST['searchType'];
+	$type=$_GET['type'];
 
 	
 	
@@ -124,9 +124,9 @@ if (isset($_POST['submit'])) {
   
   $results_dblp=array();
 		
-		if($_POST['searchType']=="author"){
+		if($_GET['type']=="author"){
 			
-			 $request = 'http://dblp.uni-trier.de/search/author/api?q='. urlencode( $_POST["searchText"]).'&h=1000&c=0&rd=1a&format=json';
+			 $request = 'http://dblp.uni-trier.de/search/author/api?q='. urlencode( $_GET["q"]).'&h=1000&c=0&rd=1a&format=json';
 			 $response  = file_get_contents($request);
 			 $jsonobj  = json_decode($response);
 			 $results_author=array();
@@ -156,46 +156,39 @@ if (isset($_POST['submit'])) {
 						
 					}
 				}
-				
-				
-				
+	
 			  }
 			 
 			}
-			 
-			 
+ 
 		}
 		else{
-			$request = 'http://dblp.uni-trier.de/search/publ/api?q='. urlencode( $_POST["searchText"]).'&h=1000&c=0&rd=1a&format=json';
+			$request = 'http://dblp.uni-trier.de/search/publ/api?q='. urlencode( $_GET["q"]).'&h=1000&c=0&rd=1a&format=json';
 			  $response  = file_get_contents($request);
 			  $jsonobj  = json_decode($response);
 			  $hits=$jsonobj->result->hits->hit;
 			 
 					 $i=0;
 		  foreach($hits as $hit){
-			
-			$authors="";
-			
-			$a;
-			if(isset($hit->info->authors->author)){
-			
-			if( is_array($a=$hit->info->authors->author) ){
-			for($c=0; $c<sizeof($a); $c++){
-			 $authors.=$a[$c]. " / ";
-			
-			}
-			}
-			else{
-				 $authors.=$a. " / ";
-			}
-			}
-			
-		 
-			
+				$authors="";
 
-			$item=array("url"=>$hit->info->url ,"title"=>$hit->info->title,"authors"=>$authors,"abstract"=>"","publisher"=>"DBLP");
-			array_push($results_dblp,$item);
-		  $i++;
+				$a;
+				if(isset($hit->info->authors->author)){
+
+				if( is_array($a=$hit->info->authors->author) ){
+				for($c=0; $c<sizeof($a); $c++){
+				 $authors.=$a[$c]. " / ";
+
+				}
+				}
+				else{
+					 $authors.=$a. " / ";
+				}
+				}
+
+				$item=array("url"=>$hit->info->url ,"title"=>$hit->info->title,"authors"=>$authors,"abstract"=>"","publisher"=>"DBLP");
+				array_push($results_dblp,$item);
+				$i++;
 		  }
 			 
 		}
@@ -203,29 +196,29 @@ if (isset($_POST['submit'])) {
   
   
  // springer 
-	if($searchType=='all') {
-		$request_sp = 'http://api.springer.com/metadata/json?&api_key=82de5935b837e1940ae61325f7f24b53&q=' . urlencode( $_POST["searchText"])."&s=1&p=100";
+	if($type=='all') {
+		$request_sp = 'http://api.springer.com/metadata/json?&api_key=82de5935b837e1940ae61325f7f24b53&q=' . urlencode( $_GET["q"])."&s=1&p=100";
 	}
-	else if($searchType=='title') {
-		$request_sp = 'http://api.springer.com/metadata/json?&api_key=82de5935b837e1940ae61325f7f24b53&q=title:' . urlencode( $_POST["searchText"])."&s=1&p=100";
+	else if($type=='title') {
+		$request_sp = 'http://api.springer.com/metadata/json?&api_key=82de5935b837e1940ae61325f7f24b53&q=title:' . urlencode( $_GET["q"])."&s=1&p=100";
 	
 	}
-	else if($searchType=='author') {
-		$request_sp = 'http://api.springer.com/metadata/json?&api_key=82de5935b837e1940ae61325f7f24b53&q=name:' . urlencode( $_POST["searchText"])."&s=1&p=100";
+	else if($type=='author') {
+		$request_sp = 'http://api.springer.com/metadata/json?&api_key=82de5935b837e1940ae61325f7f24b53&q=name:' . urlencode( $_GET["q"])."&s=1&p=100";
 	
 	}
 	
 	
   // cinii
-  if($searchType=='all') {
-		 $request_cinii ='http://ci.nii.ac.jp/opensearch/search?q=' . urlencode( $_POST["searchText"]).'&count=100&start=1&lang=en&title=&author=&affiliation=&journal=&issn=&volume=&issue=&page=&publisher=&references=&year_from=&year_to=&range=&sortorder=&format=json';
+  if($type=='all') {
+		 $request_cinii ='http://ci.nii.ac.jp/opensearch/search?q=' . urlencode( $_GET["q"]).'&count=100&start=1&lang=en&title=&author=&affiliation=&journal=&issn=&volume=&issue=&page=&publisher=&references=&year_from=&year_to=&range=&sortorder=&format=json';
  }
-	else if($searchType=='title') {
-		  $request_cinii ='http://ci.nii.ac.jp/opensearch/search?q=&count=100&start=1&lang=en&title=' . urlencode( $_POST["searchText"]).'&author=&affiliation=&journal=&issn=&volume=&issue=&page=&publisher=&references=&year_from=&year_to=&range=&sortorder=&format=json';
+	else if($type=='title') {
+		  $request_cinii ='http://ci.nii.ac.jp/opensearch/search?q=&count=100&start=1&lang=en&title=' . urlencode( $_GET["q"]).'&author=&affiliation=&journal=&issn=&volume=&issue=&page=&publisher=&references=&year_from=&year_to=&range=&sortorder=&format=json';
 
 	}
-	else if($searchType=='author') {
-		 $request_cinii ='http://ci.nii.ac.jp/opensearch/search?q=&count=100&start=1&lang=en&title=&author='.urlencode( $_POST["searchText"]).'&affiliation=&journal=&issn=&volume=&issue=&page=&publisher=&references=&year_from=&year_to=&range=&sortorder=&format=json';
+	else if($type=='author') {
+		 $request_cinii ='http://ci.nii.ac.jp/opensearch/search?q=&count=100&start=1&lang=en&title=&author='.urlencode( $_GET["q"]).'&affiliation=&journal=&issn=&volume=&issue=&page=&publisher=&references=&year_from=&year_to=&range=&sortorder=&format=json';
 
 	}
  	
@@ -301,8 +294,8 @@ if (isset($_POST['submit'])) {
 	  }
  
 		$openCurl = curl_init();
-		$request_el = 'http://api.elsevier.com/content/search/index:SCIDIR?query=' . urlencode( $_POST["searchText"]). '&APIKey=cfa8ba30cdf0d24033753673a016c3af&count=100' ;
-		//$request_el = 'http://api.elsevier.com/content/search/scopus?query=' . urlencode( $_POST["searchText"]). '&view=COMPLETE&count=' . $countIncrement . '&start=' . $offset;
+		$request_el = 'http://api.elsevier.com/content/search/index:SCIDIR?query=' . urlencode( $_GET["q"]). '&APIKey=cfa8ba30cdf0d24033753673a016c3af&count=100' ;
+		//$request_el = 'http://api.elsevier.com/content/search/scopus?query=' . urlencode( $_GET["q"]). '&view=COMPLETE&count=' . $countIncrement . '&start=' . $offset;
 	
 		curl_setopt_array($openCurl, array(
 			CURLOPT_RETURNTRANSFER => 1,
