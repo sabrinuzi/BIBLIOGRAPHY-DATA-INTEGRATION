@@ -52,21 +52,14 @@ include('libs/Elsevier.php');
         </div><!--/.nav-collapse -->
       </div>
     </div>
-
-	
-	
-<br/>
-	<div class="container">
+		<br/>
+		<div class="container">
 		<hr>
 		<div class="row left">
 			<div class="col-lg-8 col-lg-offset-3">
 				<form class="form-inline" role="form" action="result.php"  method="get" >
 				  <div class="form-group">
-				    <input class="form-control" type="text" id="q" name="q" value="<?php 
-					 if (isset($_GET['q'])){
-					  echo($_GET['q']); }
-					 
-					  ?>"
+				    <input class="form-control" type="text" id="q" name="q" value="<?php  if (isset($_GET['q']))  echo($_GET['q']);	 ?>"
 				  </div>
 				  <div class="form-group">
 					    <select id="type" name="type" class="form-control">
@@ -100,111 +93,91 @@ include('libs/Elsevier.php');
 		
 	</div><!-- /container -->
 	
-	<div class="container">
-	<hr>
-		<div class="row mt left">
-			<div class="col-lg-8">
-			 <ul  >
+		<div class="container">
+			<hr>
+			<div class="row mt left">
+				<div class="col-lg-8">
+			 <ul>
 			 <?php
-if (isset($_GET['q'])) {
-	
-	$type=$_GET['type'];
+					if (isset($_GET['q'])) {
 
-	$results_springer=array();
-	$results_elsevier=array();
-	$results_cinii=array();
+						$type=$_GET['type'];
 
-  $results_dblp=array();
-	
-	$dblp=new Dblp($_GET["q"]);
-	$results_dblp=$dblp->result();
-	
-  $springer=new Springer($_GET["q"],$type);
-	$results_springer=$springer->result();
-	
-	$cinii=new Cinii($_GET["q"]);
-	$results_cinii=$cinii->result();
+						$results_springer=array();
+						$results_elsevier=array();
+						$results_cinii=array();
 
-	$elsevier=new Elsevier($_GET["q"]);
-	$results_elsevier=$elsevier->result();
- 
-  echo "\t <b> Total results: "; 
-  echo count($results_springer) + count($results_cinii)+count($results_elsevier)+count($results_dblp)." </b> <br/> <br/>";
-                    
-  $sizes_of_results=array(count($results_springer),count($results_cinii),count($results_elsevier),count($results_dblp));
+						$results_dblp=array();
 
- $increment=0;
-	echo '<div id="first-container">';
-	echo '<table> <tbody> ';
-  for($i=0;$i<max($sizes_of_results);$i++)
-  	{
-		echo '<tr><td>';
-		if($i<count($results_springer)){
-			
-			echo "   ". ($increment+1) ." - <a target='_blank' href='" . $results_springer[$i]['url'] . "'> ". $results_springer[$i]['title']. " </a> - By (". $results_springer[$i]['authors'] .")  (Springer)";
-			echo "<br/>";
-			echo "<b>Abstract: </b> ".  substr( $results_springer[$i]['abstract'], 0, 50)." ... " ;
-			 $increment+=1;
-		 echo "<hr/>";
-		}
+						$dblp=new Dblp($_GET["q"]);
+						$results_dblp=$dblp->result();
 
-		if($i<count($results_elsevier)){
-			echo "  ". ($increment+1) ." - <a target='_blank'  href='" . $results_elsevier[$i]['url'] . "'> ". $results_elsevier[$i]['title']. " </a> - By (". $results_elsevier[$i]['authors'] .")  (Elsevier)";
-			echo "<br/>";
-			echo "<b>Abstract: </b> ".  substr( $results_elsevier[$i]['abstract'], 0, 50)." ..." ;
-			 $increment+=1;
-				echo "<hr/>";
-		}
+						$springer=new Springer($_GET["q"],$type);
+						$results_springer=$springer->result();
 
-		if($i<count($results_cinii)){
-			echo " ". ($increment+1) ." - <a target='_blank' href='" . $results_cinii[$i]['url'] . "'> ". $results_cinii[$i]['title']. " </a> - By (". $results_cinii[$i]['authors'] .")  (Cinii)";
-			echo "<br/>";
-			echo "<b>Abstract: </b> ". substr($results_cinii[$i]['abstract'], 0, 50)." ..." ;
-			 $increment+=1;
-			 echo "<hr/>";
-		}
-		if($i<count($results_dblp)){
-		echo " <br/> ". ($increment+1) ." - <a target='_blank'  href='http://dblp.uni-trier.de/" . $results_dblp[$i]['url'] . "'> ". $results_dblp[$i]['title']. " </a> - By (".  $results_dblp[$i]['authors'] .")  (DBLP)";
-		echo "<br/>";
-		echo "<b>Abstract: </b> ...";
-			 $increment+=1;
-		 echo "<hr/>";
-		 }
-  	echo '</td></tr>';
-	}
-  	echo "<br/> ";
-	echo '</tbody>
-	</table>';
-	echo '
-			<div class="my-navigation">
-				<div class="simple-pagination-first"></div>
-				<div class="simple-pagination-previous"></div>
-				<div class="simple-pagination-page-numbers"></div>
-				<div class="simple-pagination-next"></div>
-				<div class="simple-pagination-last"></div>
-			</div>
-		</div>
-	';
+						$cinii=new Cinii($_GET["q"]);
+						$results_cinii=$cinii->result();
 
-} ?>
+						$elsevier=new Elsevier($_GET["q"]);
+						$results_elsevier=$elsevier->result();
 
-  
-				
+						echo "\t <b> Total results: "; 
+						echo count($results_springer) + count($results_cinii)+count($results_elsevier)+count($results_dblp)." </b> <br/> <br/>";
+
+						$sizes_of_results=array(count($results_springer),count($results_cinii),count($results_elsevier),count($results_dblp));
+
+					 	$increment=0;
+						echo '';
+
+						for($i=0;$i<max($sizes_of_results);$i++)
+							{
+
+							if($i<count($results_springer)){
+
+								echo "   ". ($increment+1) ." - <a target='_blank' href='" . $results_springer[$i]['url'] . "'> ". $results_springer[$i]['title']. " </a> - By (". $results_springer[$i]['authors'] .")  (Springer)";
+								echo "<br/>";
+								echo "<b>Abstract: </b> ".  substr( $results_springer[$i]['abstract'], 0, 50)." ... " ;
+								 $increment+=1;
+							 echo "<hr/>";
+							}
+
+							if($i<count($results_elsevier)){
+								echo "  ". ($increment+1) ." - <a target='_blank'  href='" . $results_elsevier[$i]['url'] . "'> ". $results_elsevier[$i]['title']. " </a> - By (". $results_elsevier[$i]['authors'] .")  (Elsevier)";
+								echo "<br/>";
+								echo "<b>Abstract: </b> ".  substr( $results_elsevier[$i]['abstract'], 0, 50)." ..." ;
+								 $increment+=1;
+									echo "<hr/>";
+							}
+
+							if($i<count($results_cinii)){
+								echo " ". ($increment+1) ." - <a target='_blank' href='" . $results_cinii[$i]['url'] . "'> ". $results_cinii[$i]['title']. " </a> - By (". $results_cinii[$i]['authors'] .")  (Cinii)";
+								echo "<br/>";
+								echo "<b>Abstract: </b> ". substr($results_cinii[$i]['abstract'], 0, 50)." ..." ;
+								 $increment+=1;
+								 echo "<hr/>";
+							}
+							if($i<count($results_dblp)){
+							echo " <br/> ". ($increment+1) ." - <a target='_blank'  href='http://dblp.uni-trier.de/" . $results_dblp[$i]['url'] . "'> ". $results_dblp[$i]['title']. " </a> - By (".  $results_dblp[$i]['authors'] .")  (DBLP)";
+							echo "<br/>";
+							echo "<b>Abstract: </b> ...";
+								 $increment+=1;
+							 echo "<hr/>";
+							 }
+
+						}
+						echo "<br/> ";
+					} ?>
+
 				</div>
 		</div><!-- /row -->
 	
+		</div><! --/container -->
 
-	</div><! --/container -->
+		<div class="container">
+			<hr>
+			<p class="centered">by S.Nuzi -2015</p>
+		</div><!-- /container -->
 
-	<div class="container">
-	
-		
-		<hr>
-		<p class="centered">by S.Nuzi -2015</p>
-	</div><!-- /container -->
-
-	
-	
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
@@ -212,7 +185,6 @@ if (isset($_GET['q'])) {
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
 		<script src="assets/js/waitMe.js"></script>
-		
 		
 <script>
 $(document).ready(function() {
@@ -224,39 +196,21 @@ $(document).ready(function() {
 		});
 
 		function run_waitMe(effect){
-		$('#body').waitMe({
-
-		//none, rotateplane, stretch, orbit, roundBounce, win8, 
-		//win8_linear, ios, facebook, rotation, timer, pulse, 
-		//progressBar, bouncePulse or img
-		effect: 'bounce',
-
-		//place text under the effect (string).
-		text: 'Searching publications...',
-
-		//background for container (string).
-		bg: 'rgba(255,255,255,0.7)',
-
-		//color for background animation and text (string).
-		color: '#000',
-
-		//change width for elem animation (string).
-		sizeW: '',
-
-		//change height for elem animation (string).
-		sizeH: '',
-
-		// url to image
-		source: '',
-
-		// callback
-		onClose: function() {}
-
-		});
+			$('#body').waitMe({
+				effect: 'bounce',
+				text: 'Searching publications...',
+				bg: 'rgba(255,255,255,0.7)',
+				color: '#000',
+				sizeW: '',
+				sizeH: '',
+				source: '',
+				onClose: function() {}
+			});
 		}
 
-		});
+});
 </script>
-		
-  </body>
+	
+</body>
+
 </html>
