@@ -15,7 +15,7 @@
 
     <!-- Custom styles for this template -->
     <link href="assets/css/main.css" rel="stylesheet">
-
+		<link type="text/css" rel="stylesheet" href="assets/css/waitMe.css">
     <!-- Fonts from Google Fonts -->
 	<link href='http://fonts.googleapis.com/css?family=Lato:300,400,900' rel='stylesheet' type='text/css'>
     
@@ -26,7 +26,7 @@
     <![endif]-->
   </head>
 
-  <body>
+  <body id='body'>
 
     <!-- Fixed navbar -->
     <div class="navbar navbar-default navbar-fixed-top">
@@ -89,6 +89,53 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+		<script src="assets/js/waitMe.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
   </body>
+	
+			
+<script>
+$(document).ready(function() {
+
+		var current_effect = 'bounce'; // 
+
+		$('#searchButton').click(function(){
+			run_waitMe(current_effect);
+		});
+
+		function run_waitMe(effect){
+		$('#body').waitMe({
+
+		//none, rotateplane, stretch, orbit, roundBounce, win8, 
+		//win8_linear, ios, facebook, rotation, timer, pulse, 
+		//progressBar, bouncePulse or img
+		effect: 'bounce',
+
+		//place text under the effect (string).
+		text: 'Searching publications...',
+
+		//background for container (string).
+		bg: 'rgba(255,255,255,0.7)',
+
+		//color for background animation and text (string).
+		color: '#000',
+
+		//change width for elem animation (string).
+		sizeW: '',
+
+		//change height for elem animation (string).
+		sizeH: '',
+
+		// url to image
+		source: '',
+
+		// callback
+		onClose: function() {}
+
+		});
+		}
+
+		});
+</script>
+	
 </html>
