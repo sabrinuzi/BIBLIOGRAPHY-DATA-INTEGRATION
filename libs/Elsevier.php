@@ -71,7 +71,6 @@ private  $loopThrough = 1;
 					print "\tNo publications recorded with this ID.\n";
 					// If the query returns 0 results, then quit looping through this publication eID
 					$this->loopThrough  = 0;
-					continue;
 				} else {
 					
 				}
