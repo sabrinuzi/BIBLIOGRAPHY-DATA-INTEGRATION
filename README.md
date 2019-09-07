@@ -6,4 +6,17 @@ During this work several sources that serve the data through API have been inclu
 This system integrates several online science related sources like Springer, Elsevier CiNii and DBLP in a single system. 
 
 
-![Alt text](screnshot/Screenshot_27.png?raw=true "Main page")
+![Home page](screnshot/Screenshot_27.png?raw=true "Main page")
+![Reuslt page](screnshot/results.png?raw=true "Result page")
+
+### Run docker
+Build docker image:
+`docker build -t snuzi-bdi .`
+
+
+Run docker image:
+`docker run -p 8890:80 snuzi-bdi`
+
+
+Access the site:
+`localhost:8890`
