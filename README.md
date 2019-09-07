@@ -6,8 +6,8 @@ During this work several sources that serve the data through API have been inclu
 This system integrates several online science related sources like Springer, Elsevier CiNii and DBLP in a single system. 
 
 
-![Home page](/screnshot/Screenshot_27.png?raw=true "Main page")
-![Reuslt page](screnshot/results.png?raw=true "Result page")
+![Home page](src/screnshot/Screenshot_27.png?raw=true "Main page")
+![Reuslt page](src/screnshot/results.png?raw=true "Result page")
 
 ### Run docker
 Build docker image:
